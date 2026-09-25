@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="TankTrack is a personal freshwater aquarium maintenance and water-parameter tracker."
+    />
+    <title>TankTrack | Aquarium care, on schedule</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Outfit:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="#dashboard" aria-label="TankTrack home">
+        <span class="brand-mark">⌇</span>
+        <span>Tank<span>Track</span></span>
+      </a>
+      <nav aria-label="Main navigation">
+        <a class="nav-link active" href="#dashboard">Dashboard</a>
+        <a class="nav-link" href="#tanks">Tanks</a>
+        <a class="nav-link" href="#history">History</a>
+      </nav>
+      <button class="icon-button" id="settings-button" aria-label="Open data settings">⚙</button>
+    </header>
+
+    <main>
+      <section class="hero" id="dashboard">
+        <div>
+          <p class="eyebrow" id="today-label">YOUR AQUARIUMS</p>
+          <h1>Care that keeps<br /><em>everything thriving.</em></h1>
+          <p class="hero-copy">A calm, clear view of the water values and routines that matter to your little ecosystems.</p>
+        </div>
+        <button class="primary-button" data-open-modal="log">
+          <span>+</span> Log water test
+        </button>
+      </section>
+
+      <section class="summary-grid" aria-label="Aquarium summary">
+        <article class="summary-card aqua-card">
+          <span class="summary-icon">◌</span>
+          <div><p>Active tanks</p><strong id="tank-count">0</strong></div>
+          <span class="summary-detail">freshwater</span>
+        </article>
+        <article class="summary-card coral-card">
+          <span class="summary-icon">✓</span>
+          <div><p>Tasks today</p><strong id="task-count">0</strong></div>
+          <span class="summary-detail" id="task-detail">all caught up</span>
+        </article>
+        <article class="summary-card lime-card">
+          <span class="summary-icon">⌁</span>
+          <div><p>Latest nitrate</p><strong id="nitrate-value">—</strong></div>
+          <span class="summary-detail" id="nitrate-detail">log a test</span>
+        </article>
+      </section>
+
+      <section class="content-grid">
+        <div class="panel tanks-panel" id="tanks">
+          <div class="panel-heading">
+            <div><p class="eyebrow">YOUR SETUPS</p><h2>Tank overview</h2></div>
+            <button class="text-button" data-open-modal="tank">+ Add tank</button>
+          </div>
+          <div class="tank-list" id="tank-list"></div>
+        </div>
+
+        <div class="panel tasks-panel">
+          <div class="panel-heading">
+            <div><p class="eyebrow">TODAY'S RHYTHM</p><h2>Care tasks</h2></div>
+            <button class="text-button" data-open-modal="task">+ Add task</button>
+          </div>
+          <div class="progress-row"><span id="progress-label">0 of 0 completed</span><div class="progress-track"><span id="progress-bar"></span></div></div>
+          <div class="task-list" id="task-list"></div>
+        </div>
+      </section>
+
+      <section class="panel recent-panel" id="history">
+        <div class="panel-heading">
+          <div><p class="eyebrow">THE PAPER TRAIL</p><h2>Recent water tests</h2></div>
+          <button class="text-button" data-open-modal="log">+ New reading</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Date</th><th>Tank</th><th>pH</th><th>GH</th><th>KH</th><th>Nitrate</th><th>Notes</th></tr></thead>
+            <tbody id="log-list"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <dialog class="modal" id="tank-modal">
+      <form method="dialog" id="tank-form">
+        <div class="modal-heading"><div><p class="eyebrow">NEW SETUP</p><h2>Add a tank</h2></div><button class="close-button" value="cancel" aria-label="Close">×</button></div>
+        <label>Tank name<input name="name" required placeholder="e.g. Cherry Shrimp Nano" maxlength="40" /></label>
+        <div class="form-row"><label>Size<input name="size" required type="number" min="1" step="0.5" placeholder="10" /></label><label>Unit<select name="unit"><option value="g">gallons</option><option value="L">litres</option></select></label></div>
+        <label>Residents <input name="residents" placeholder="e.g. Neocaridina, anubias" maxlength="80" /></label>
+        <div class="form-actions"><button value="cancel" class="secondary-button">Cancel</button><button class="primary-button" value="default">Save tank</button></div>
+      </form>
+    </dialog>
+
+    <dialog class="modal" id="log-modal">
+      <form method="dialog" id="log-form">
+        <div class="modal-heading"><div><p class="eyebrow">NEW ENTRY</p><h2>Log a water test</h2></div><button class="close-button" value="cancel" aria-label="Close">×</button></div>
+        <div class="form-row"><label>Tank<select name="tankId" id="log-tank" required></select></label><label>Date<input name="date" type="date" required /></label></div>
+        <div class="test-grid"><label>pH<input name="ph" type="number" min="0" max="14" step="0.1" placeholder="7.0" /></label><label>GH <span>(dGH)</span><input name="gh" type="number" min="0" step="1" placeholder="6" /></label><label>KH <span>(dKH)</span><input name="kh" type="number" min="0" step="1" placeholder="3" /></label><label>Nitrate <span>(ppm)</span><input name="nitrate" type="number" min="0" step="1" placeholder="10" /></label></div>
+        <label>Notes <textarea name="notes" maxlength="140" placeholder="Anything worth remembering?"></textarea></label>
+        <div class="form-actions"><button value="cancel" class="secondary-button">Cancel</button><button class="primary-button" value="default">Save reading</button></div>
+      </form>
+    </dialog>
+
+    <dialog class="modal" id="task-modal">
+      <form method="dialog" id="task-form">
+        <div class="modal-heading"><div><p class="eyebrow">CARE ROUTINE</p><h2>Add a task</h2></div><button class="close-button" value="cancel" aria-label="Close">×</button></div>
+        <label>Task <input name="title" required placeholder="e.g. Dose liquid fertilizer" maxlength="60" /></label>
+        <label>Tank<select name="tankId" id="task-tank"><option value="all">All tanks</option></select></label>
+        <div class="form-actions"><button value="cancel" class="secondary-button">Cancel</button><button class="primary-button" value="default">Add task</button></div>
+      </form>
+    </dialog>
+
+    <dialog class="modal small-modal" id="settings-modal">
+      <form method="dialog">
+        <div class="modal-heading"><div><p class="eyebrow">YOUR DATA</p><h2>Data settings</h2></div><button class="close-button" value="cancel" aria-label="Close">×</button></div>
+        <p class="settings-copy">TankTrack stores your data in this browser only. Export a backup before moving to another device.</p>
+        <button class="secondary-button full-width" type="button" id="export-button">Export backup (.json)</button>
+        <label class="import-label">Import backup<input id="import-input" type="file" accept="application/json" /></label>
+        <button class="danger-button" type="button" id="reset-button">Reset all TankTrack data</button>
+      </form>
+    </dialog>
+
+    <template id="empty-state"><div class="empty-state">Nothing here yet. Add your first entry to get started.</div></template>
+    <script src="app.js"></script>
+  </body>
+</html>
